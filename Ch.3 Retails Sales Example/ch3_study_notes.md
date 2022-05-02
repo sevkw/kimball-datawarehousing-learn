@@ -132,6 +132,44 @@ Percentages and ratios are always non-additive. The numerator and denominator sh
 
 ## Product Dimension
 
+- describes every SKU in grocery store
+- sourced from operational product master file
+
+### Flatten Many-to-one Hierarchies
+Typical merchandise hierarchy contains:
+- individual SKUs >> brands >> categories >> departments
+- each of the roll-up is a **many-to-one** relationship 
+- no need to seoarate repeated values into a second normalized table to save space (b.c vs fct tables, they are relatively small)
+- **keep the repeated low cardinality values in primary dimension is a fundamental modeling technique**
+- some attribute do not necessarily form any hierarchy e.g. `packaging_type`, b.c. any row can have one of these values
+
+### Attributes with Embedded Meaning
+Natural key identifiers (e.g. SKUs) can contain different parts in the code, with each part carrying different meaning. These multi parts in the natural key identifiers should be:
+- have the entire code be preserved as a unique identifier
+- the parts broken down into component parts representing different attributes
+
+### Numeric values as Attributes or Facts
+
+1. Dimension tables should be consistent
+2. Data involved in calculations should be in fact tables
+3. Data involved in constraints, groups, and labels should be in dimension tables
+
+- Would the numeric value be used primarily for calculation purpose? Yes: fact table; No: dim table
+- Would the numeric value used more for grouping or filtering? Yes: dimtable; No: fact table
+
+Sometimes, numerci values can serve calculation and filtering purpose.
+- store value in both fact and dimension tables
+
+Date Elements are used both for fact calculations and dimension constrainin and should be stored in both locations.
+
+### Drilling Down on Dimension Attributes
+More dimenions adds more capabilities for users to group and filter their analysis and hierarchies.
+
+## Store Dimension
+Describes every store in grocery chain. Notice that, compared to product dimensions, each store may have different source file.
+
+### Multiple Hierarchies in Dimension Tables
+
 ## Casual dimensions
 ## Degenerate dimensions
 ## Nulls in a dimensional model
