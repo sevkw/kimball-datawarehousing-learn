@@ -6,10 +6,12 @@ This chapter focuses on the build of a typical fact table by introducing the rel
 ### Business Summary
 - large grocery chain with 100 grocery stores in 5 states
 - each store sells different types of products (totalling ~6000 SKU on shelves)
-** Data Collection**
+
+#### Data Collection
 - cash register: POS system that scan bar codes; customers receive a receipt upon transaction with list of item and total price charged
 - back order system for vendor and delivery
-**Business Problem**
+
+#### Business Problem
 Management concerned with:
   - ordering logistics
   - stocking
@@ -69,13 +71,14 @@ A fact derived from performing calculations based on existing fact. e.g. calcula
 #### Should you store a calculated derived fact in the database?
 - generally recommended to be stored physically for **consistency**
 
-**Advantage**
+#### Advantage
 - means computed consistently in the ETL process
 - eliminates the possibility of user calculation errors
 - ensures all users and BI reporting applications refer to the derived fact consistently
 
-**Disadvantage**
+#### Disadvantage
 - potential storage cost and processing pressure
+
 ### Non-additive Facts
 Fact measures from each row that cannot be added or summarized along any dimension.
 - gross margin is calculated by **division**: gross profit / sales revenue
@@ -94,7 +97,41 @@ Percentages and ratios are always non-additive. The numerator and denominator sh
 
 ## Dimension attributes: indicators, numeric descriptions, and multiple hierarchies
 
-## Calendar date dimensions & time-of-day
+### Date Dimension
+- dimensional models always need an explicit date dimension table
+- every business process captures a time series of performance metrics
+- date dimension can be built in advance with each row representing a particular day
+  - 20 years worth of date dimensions ~ 7300 rows
+- a date dimension is needed b.c it allows for flexible filtering to be applied on the data
+  - SQL functions do not allow filtering by weekdays, weekends, holidays, fiscal periods etc.
+#### Set Meaningful and Self-explanatory Flags and Indicators
+-  date dimension's holiday indicator has 2 potential values (boolean)
+-  always think about what **values** would the flag/indicator serve
+   - need to give **meaningful values** even though it is a boolean
+   - `Y/N` vs. `Holiday/ Non-Holiday`
+   - meaning ful domain translate indicator into a more self-explanatory report
+   - you do not have to spend time decode the meaning of the boolean/ flag values
+#### Relative Date Attributes
+- most of dimension attributes are not subject to **frequent updates**
+- some will change over time relative to the passage of time
+  - is_current_day / is_current_month
+  - is_prior_60_days
+  - unique corporate financial reporting calender e.g. is_fiscal_month_end
+- some date dimensions should include updated **lag attributes**
+  - 0: today; +1: tomorrow; -1: yesterday
+  - recommends **computed column** rather than physically stored
+  - if BI tools automatically performas this calculation, then no need to add lag columns
+
+#### Time-of-day should be captured as a Fact using timestamps
+- time-of-day typically separated from date dimension to avoid row count explosion in date dimension
+- date dimension should be kept small and manageable
+- think of granularity: 
+  - date granular: 7000 rows for each day in 20 years
+  - *1440 mins per day if granularity at minutes
+- time-of-day should be handled as a simple date/time fact in the fact table
+
+## Product Dimension
+
 ## Casual dimensions
 ## Degenerate dimensions
 ## Nulls in a dimensional model
