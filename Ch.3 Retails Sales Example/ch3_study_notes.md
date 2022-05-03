@@ -237,9 +237,12 @@ Examples are:
 In this retail sales case, POS transaction number is a DD. Under each transaction id there can be multiple line items.
 
 ## Retail Schema in Action
-See Figure 3-12 in the book
+See Figure 3-12 in the book:
 
-## Extensibility of dimensional models
+![Figure 3-12](fig_3_12_querying_retail_sales_schema.jpg)
+
+
+## Extensibility of Dimensional Models
 ## Factless fact tables
 ## Surrogate, natural, and durable keys
 ## Snowflaked dimension attributes
