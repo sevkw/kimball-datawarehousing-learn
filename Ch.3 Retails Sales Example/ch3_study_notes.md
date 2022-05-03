@@ -1,4 +1,4 @@
-# chapter 3: Retails Sales Study Notes
+# Chapter 3: Retails Sales Study Notes
 This chapter focuses on the build of a typical fact table by introducing the relationship between the built of a fact table to a business process (in this example, it is a retail sales business process). 
 
 ## Retail Store Business Case
@@ -262,8 +262,36 @@ E.g. a promotion coverage fact table regardless whether the product gets sold
   - enables us to see relationship between keys as defined by a promotion, **independent of other events**
   - has no measure metrics
   - only captures the relationship between involved keys
- 
 
-## Surrogate, natural, and durable keys
+ ![Figure 3-14](fig_3_14_factless_fact_table.jpg)
+
+## Dimension and Fact Table Keys
+
+### Dimension Table Surrogate Keys
+[Surrogate key](https://en.wikipedia.org/wiki/Surrogate_key) should be used as the unique primary key in a dimension table rather than a natural key - operational system identifier. Primary key (PK) and foreign key (FK) are both surrogate keys.
+**Avoid using natural keys as dimension table's primary key.**
+- natural keys may be fast at the beginning but in the long term required little maintainance and rework because
+  1. Surrogate keys buffer data warehouse from operational changes
+  2. Integrate multiple source system: keeping the natural keys from different operational systems while still haveing the surrogate key is very helpful in the link
+  4. Improve performance: surrogate keys are actually very small in storage
+  5. Handle null or unknown conditions
+  6. Support dimension attribute change tracking
+ 
+ ### Dimension Natural and Durable Supernatural Keys
+ Natural keys are often modeled as an attribute in a dimension table, it is recommended we specify the natural key's source. 
+ Also important to have an identifier that tracks the dimensiooon entity across its attribute changes other than solely relying on a natural key.
+   - use of supernatural key: a type of permanent durable surrogate key that remains immutable for the life of a system. It is not a replacement for a dimension table's surrogate primary key
+ 
+ ### Degenerate Dimension Surrogate Keys
+ A `surrogate key` is necessary if the transaction control numbers are not unique across locations or get reused.
+ 
+ ### Date Dimension Smart Keys
+ How to determine the primary key of a date dimension?
+ Calendar dates are fixed and predetermined, so it is predictable and follows a pattern. Using `yyyymmdd` as the date's primary key, or sometimes just a date-type column like `yyyy-mm-dd`.
+ Filtering and grouping on calendar attributes should occur in a dimension table, not inthe BI application's code.
+ Date smart keys are useful for partitioning fact tables.
+ 
+ ### Fact Table Surrogate Keys
+ 
 ## Snowflaked dimension attributes
 ## Centipede fact tables with "too many dimensions"
