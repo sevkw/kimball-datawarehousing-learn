@@ -169,10 +169,76 @@ More dimenions adds more capabilities for users to group and filter their analys
 Describes every store in grocery chain. Notice that, compared to product dimensions, each store may have different source file.
 
 ### Multiple Hierarchies in Dimension Tables
+- very common to have multiple hierarchu in a dimension table
+- the atrtribute names and values should be unique across the multiple hierarchies (thus each row is unique)
 
-## Casual dimensions
-## Degenerate dimensions
-## Nulls in a dimensional model
+### Recommended Retail Store Dimension
+Store Key (PK) | Store Number (FK) | Store Name |Store Street Address| Store City | Store County | Store City-State | Store State | Zip Code | Store Manager | Store Distinct | Store Region | Floor Plan Type | First Open Date | Total Square Footage
+
+### Dates Within Dimension Tables
+- `first_open_date` and `last_remodel_date` in store dimension should be **date type**
+- join keys to date dimension table if users want to group by different calendar attributes
+
+## Promotion Dimension
+- often called a **casual dimension**: it describes the factors thought to cause a change in product sales
+
+### Available Sources
+- POS systems: do not directly track casual conditions affectinga sales
+- Transaction systems: price reduction and markdowns
+- Coupons: captured with transactions
+- Ads and in-store display
+
+Various possible casual conditions are highly correlated:
+e.g. where products are displayed for buyers' convenience
+
+- create one row in promotion dimension for each combination of promotion conditions that occurs
+
+### How to record promotions: a trade-off to make
+1. separating casual mechanisms into seperate dimensions
+   - more understandable to business
+   - administration will be more straight forward 
+2. keeping the dimensions together
+   - if the attributes are highly correlated, combined dimension is not much larger than any one of the separated dimensions
+   - combined single dimension can be browsed effectively; but only shows what are the combinations are available
+### Promotion Cost
+- this attribute can be used for constraining and grouping
+- should not appear in POS transaction fact table b.c it is at the wrong grain
+- this cost should reside in a fact table whose grain is the overall promotion
+- promotion dimension must include a row, with a unique key to indentify this no promotion condition and avoid null promotion ket in the fact table
+
+### Null Foreign Keys, and Facts
+Referential integrity is violated if you put a null in a fact table column declared as a foreign key to a dimension table
+**Must avoid null keys in a fact table. A proper deisgn includes a row in the corresponding dimension table to identify that dimension is not applicable to the measurement.**
+- Recommending using `Not Applicable` or `Unkown` to replace null value because this way we at least assign the condition to the nulls so that users can decide which nulls they should include or exclude from reporting
+- for fact table, be careful with substituting nulls by 0, which will skew the aggregated calculations
+
+### Sample Promotion Table
+Promption Key (PK) | Promotion Code | Promotion Name | Price Reduction Type | Promotion media Type | Ad Type | Display Type | Promotion Cost | Promoition Begin Date | Promotion End Date
+
+## Other Retail Sales Dimensions
+- any descriptive attribute that takes on a single value in the presence of a fact table measurement should be considered added to an existing dimension or be its own dimension
+- whether a dimension should be associated with a fact table should be a binary yes/no based on **fact table's decalred grain**
+
+### Payment Method Fact Table Sample
+How do we arrange the fact table for a POS system that allows multiple payment methods per transaction?
+- one row per payment method per product?
+- Capture payment method in a separate fact table
+  - one row per transaction
+  - one row per payment method per transaction 
+
+## Degenerate Dimensions for Transaction Numbers
+POS transaction number is a **degenerate dimension (DD)**, which sits by itself in the fact table without joining to a dimension table.
+Very common when grain of a fact table represents a single transaction or transaction line b.c. DD represents the unique identifier of the parent.
+Examples are:
+  - order numbers
+  - invoice numbers
+  - natural operational ticket number
+
+In this retail sales case, POS transaction number is a DD. Under each transaction id there can be multiple line items.
+
+## Retail Schema in Action
+See Figure 3-12 in the book
+
 ## Extensibility of dimensional models
 ## Factless fact tables
 ## Surrogate, natural, and durable keys
