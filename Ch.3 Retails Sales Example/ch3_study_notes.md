@@ -1,5 +1,8 @@
 # Chapter 3: Retails Sales Study Notes
 This chapter focuses on the build of a typical fact table by introducing the relationship between the built of a fact table to a business process (in this example, it is a retail sales business process). 
+The author goes throuh all the decision making process leading towards the design of the following dimensional schema for a retails store:
+
+![Figure 3-12](fig_3_12_querying_retail_sales_schema.jpg)
 
 ## Retail Store Business Case
 
@@ -332,6 +335,34 @@ E.g. a promotion coverage fact table regardless whether the product gets sold
 
 ### Outtrigger Dimension
 `Outtrigger dimension` is built to be attached to a dimension.
+
+  ![Figure 3-16](fig_3_16_permissible_outtrigger.jpg)
+  
+  - outtriggered dimension tables should only be used when business has specific filtering or grouping needs on an existing dimension
+  - remember they again introduce more joins and can interfere querying performance
+
+### Centipede Fact Tables with Too Many Dimensions
+
+- Fact tables in a dimensional schema is naturally highly normalized and compact
+- `Centipede fact tables` occur when:
+  - while knowing snowflaking in discouraged, modelers go around with joining normalized tables to the fact tables, resulting in a fact tables joining to multiple normalized dimension tables
+  - worth mentioning that snowflaking is dimension branched off to many other dimensions
+   
+  ![Figure 3-17](fig_3_17_too_many_normalized_dimsion.jpg)
+  
+  vs. dimension snow flasking in Figure 3-15
+  
+  ![Figure 3-15](fig_3_15_snowflaked_product_dimension.jpg)
+
+- centipede fact tables increase disk space requirements (b.c. fact tables are usually the largest tables)
+
+#### How large should a fact table be?
+
+- most business process can be represented with <= 20 dimensions in the fact table
+- if dimension > 25, indicates ways to combine correlated dimensions into a single dimension
+- always put perfectly correlated attributes and attributes with reasonable statistical correlation in the same dimension
+- encourage to combine small dimensions into one new single dimension
+- never represent elemnts of a single hierarchy as separate dimensions in the fact table
 
 
 ## Centipede fact tables with "too many dimensions"
