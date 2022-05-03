@@ -241,9 +241,29 @@ See Figure 3-12 in the book:
 
 ![Figure 3-12](fig_3_12_querying_retail_sales_schema.jpg)
 
+## Extensibility of Dimensional Models: all about granularity symmetry of existing model and the extended model
+Business change over time and new process will be introduced. When new process gets introduced the dimensional model will be extended to accomondate the new process.
+e.g. Introducing a frequent shopper program to allow analyzing each shopper's preference and behaviour
+#### Issues to Remember
+- the extension will be prospective
+  - introducing a **surrogate key** on historical fact table rows: `prior_to_frequent_shopper_program`
+  - introducing a `frequent_shopper_not_identified` row in shopper dimension (to deal with nulls)
+ - at the beginning of schema design a great granularity definition will help future extsnion of dimensional model to be smooth
+ - **Predictable symmertry**: premature summarization or aggregation limit our ability to add supplemental dimensions if the grains do not match
+ - extending an existing model always involves the following:
+   - **New dimension attributes**: new column added (still remeber to deal with nulls by adding `Not Applicable`)
+   - **New dimensions**: adding a dimension to an existing fact table by adding new FK
+   - **New measured facts**: need more attention when new measure is at different grain: new measure will have to be put in their own fact table
+ 
+## Factless fact tables - What did not happen?
+Sometimes the business need to use what did not happen to understand event coverage. A **factless fact table** would be helpful in this case.
+E.g. a promotion coverage fact table regardless whether the product gets sold
+  - one row for each production on promotion in a store each promotion period
+  - enables us to see relationship between keys as defined by a promotion, **independent of other events**
+  - has no measure metrics
+  - only captures the relationship between involved keys
+ 
 
-## Extensibility of Dimensional Models
-## Factless fact tables
 ## Surrogate, natural, and durable keys
 ## Snowflaked dimension attributes
 ## Centipede fact tables with "too many dimensions"
