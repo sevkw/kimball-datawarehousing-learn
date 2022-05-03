@@ -364,5 +364,3 @@ E.g. a promotion coverage fact table regardless whether the product gets sold
 - encourage to combine small dimensions into one new single dimension
 - never represent elemnts of a single hierarchy as separate dimensions in the fact table
 
-
-## Centipede fact tables with "too many dimensions"
