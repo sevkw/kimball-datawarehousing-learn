@@ -268,7 +268,7 @@ E.g. a promotion coverage fact table regardless whether the product gets sold
 ## Dimension and Fact Table Keys
 
 ### Dimension Table Surrogate Keys
-[Surrogate key](https://en.wikipedia.org/wiki/Surrogate_key) should be used as the unique primary key in a dimension table rather than a natural key - operational system identifier. Primary key (PK) and foreign key (FK) are both surrogate keys.
+[Surrogate key](https://en.wikipedia.org/wiki/Surrogate_key) should be used as the unique primary key in a dimension table rather than a natural key - operational system identifier. Primary key (PK) and foreign key (FK) are both surrogate keys. They are clean integers assigned by the ETL system.
 **Avoid using natural keys as dimension table's primary key.**
 - natural keys may be fast at the beginning but in the long term required little maintainance and rework because
   1. Surrogate keys buffer data warehouse from operational changes
@@ -292,6 +292,28 @@ E.g. a promotion coverage fact table regardless whether the product gets sold
  Date smart keys are useful for partitioning fact tables.
  
  ### Fact Table Surrogate Keys
+ - Kimball does not really restrict fact table to have surrogate keys b.c. surrogate keys only make sense for back room ETL processing
  
-## Snowflaked dimension attributes
+ **Benefits**
+ 1. immediate unique identification
+ 2. backing out or resuming a bulk load
+ 3. replacing updates with insets plus deletes
+   - fact tables w/o primary key can only be determined unique by specific combination of dimensional foreign keys
+   - with fact table surrogate keys, easy to target what to update and remove
+ 4. using the fact table surrogate key as a parent/child schema
+   - surrogate key in a parent fact table is also available in a child fact table
+   - but such presense is not for joining fact tables, we should never join fact tables directly to other fact tables
+   - this is only used for allowing the child fact tables to be sliced and diced without travering the parent fact table's surrogate key
+ 
+## Resisting Normalization Urges
+ 
+### Snowflake Schema with Normalized Dimensions
+- flattened and denormalized dimension tables have so many repeating textual values
+  e.g. denormalized model would store 300,000 products from 50 departments with each product row having the same deparment description columns
+  - instead, normalized model saves departmental details in a separate dimension table, leaving the product table with a FK to the department table
+    - easier to maintain and update: deptament information update no longer need to be scraped over all product rows, but only one place of change in the department dimension table
+- **Dimension table normalization is `snowflaking`**
+  - reducing redundant attributes from teh flat and denormalized dimension table by placing them into seperate normalized dimension tables
+- Figure 3-8 shows that a comprehensive fact table can become a denomalized table:
+
 ## Centipede fact tables with "too many dimensions"
