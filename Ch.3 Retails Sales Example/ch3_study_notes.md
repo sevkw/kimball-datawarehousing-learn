@@ -316,4 +316,22 @@ E.g. a promotion coverage fact table regardless whether the product gets sold
   - reducing redundant attributes from teh flat and denormalized dimension table by placing them into seperate normalized dimension tables
 - Figure 3-8 shows that a comprehensive fact table can become a denomalized table:
 
+  ![Figure 3-8](fig_3_8_product_dim_table.jpg)
+  
+- Figure 3-15 shows that a comprehensive product dim table can be normalized into multiple dimension table:
+
+  ![Figure 3-15](fig_3_15_snowflaked_product_dimension.jpg)
+
+- **Kimball encourages modelers not to snowflake dimensional tables due to the following factors:**
+  1. complicated structure to busienss users
+  2. require more joins, which will yield slower query performance
+  3. eat up minor disk space savings
+  4. negatively impacts user's ability to do cross-attribute browsing because connections are spread over different dimension tables
+  5. interferes with ability to leverage bitmap indexing
+- fixed depth hierarchies should be flattened in dimension tables
+
+### Outtrigger Dimension
+`Outtrigger dimension` is built to be attached to a dimension.
+
+
 ## Centipede fact tables with "too many dimensions"
