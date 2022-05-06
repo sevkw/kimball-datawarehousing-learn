@@ -15,7 +15,7 @@
 2. inventory transaction model
 3. inventory accumulating snapshot
 
-### Inventory Periodic Snapshot
+### 1st Model: Inventory Periodic Snapshot
 
 
 #### Business Context
@@ -61,6 +61,8 @@ Below is how this inventory model can be further enriched with considerations ab
 
 ![Figure 4-3](fig_4_3_enhanced_inventory_snapshot.jpg)
 
+
+### 2nd Model: Inventory Transactions
 
 
 
