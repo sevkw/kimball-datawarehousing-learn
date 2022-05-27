@@ -124,3 +124,45 @@ Here is a comparison of each fact table type:
 - need to be paired up with other fact tables to get better practical use
 
 ### Periodic Snapshot Fact Tables
+
+- provides cumulative performance of business at **predictable intervals**
+- usually has fewer dimensions vs. transaction fact tables
+
+### Accumulating Snapshot Fact Tables
+
+- not commonly used
+- used when business wants to perform **workflow or pipeline analysis**
+- multiple date foreign keys: represents major events or process milestones
+
+
+#### Lags between Milestones and Milestone Counts
+
+- accumulating snapshot fact tables always contains metrics representing the durations or lags between key milestones
+  - duration = difference between milestone date/timestamps
+
+#### Accumulating Snapshots Updates and OLAP Cubes
+
+- accumulating snapshot fact tables will be updated and previous value may not be preserved
+- reflects the most current status and metrics
+- do not use accumulating snapshots for scenarios that occur infrequently > use transaction fact tables instead
+- typically problematic for OLAP cubes
+  - updating rows in the table would force both facts and dimension foreign keys to change > the cube will need to be reprocessed
+
+### Complementary Fact Table Types
+
+- accumulating + periodic snapshots complement each other when:
+  - incrementally build monthly snapshot by adding the effect of each day's transactions to a rolling accumulating snapshot while also storing historical data in a periodic snapshot
+- transactions + periodic snapshot complement each other in dimensional designs
+  - provides complete view of the business
+
+
+## Value Chain Integration
+
+integration means how we are linking data from each process together so that business is able to see the whole picture through data models.
+- each model from each process sometimes share the same **business dimensions**
+
+![Figure 4-8](fig_4_8_shared_dimensions.jpg)
+
+
+
+
