@@ -163,6 +163,21 @@ integration means how we are linking data from each process together so that bus
 
 ![Figure 4-8](fig_4_8_shared_dimensions.jpg)
 
+## Enterprise Data Warehouse Bus Architecture
 
+Rome is not built in one day, better use incremental approach to build the warehouse.
 
+### Bus Architecture
+
+Bus - things that can be connected to other objects
+
+- bus interface for DW/BI environment allows incremental dimension tables to be built at different times (without disrupting what's been built)
+
+![Figure 4-9](fig_4_9_enterprise_data_with_shared_dimensions.jpg)
+
+### Enterprise Data Warehouse Bus Matrix
+
+- use it to document and communicate the bus architecture
+
+![Figure 4-10](fig_4_10_bus_matrix.jpg)
 
