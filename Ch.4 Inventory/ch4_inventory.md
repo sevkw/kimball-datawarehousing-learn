@@ -181,3 +181,116 @@ Bus - things that can be connected to other objects
 
 ![Figure 4-10](fig_4_10_bus_matrix.jpg)
 
+- rows: organization business process
+  - only grab the primary activities
+  - usually has a operational data source
+  - start with one business process row
+  - you will often identify more consolidated processes when an individual process is done
+
+- columns: common dimensions used across the enterprise
+  - start with creating a list of **core dimensions** before filling the matrix
+  - the size of the matrix vary by organizations
+
+#### Multiple Matrix Uses
+
+The matrix is the beginning of architecture planning, database design, data governance, project planning, and organizational communication.
+
+#### opportunity/Stakeholder Matrix
+
+Different matrix that leverage the **same business process** can be drafted for different departments.
+
+#### Common Bus Matrix Mistakes to Avoid
+
+1. Avoid using the rows to represent departments
+2. Matrix should not resemble a laundry list of requested reports
+3. Do not lump or group similar dimensions into one generic dimension. Make the dimensions separate
+4. Do not separate for each level of a hierarchy
+  - the columns of  the bus matrix should refer to dimensions at their most granular level
+  - can denote the granularity within the matrix cell
+
+#### Retrofitting Existing Models to a Bus Matrix
+
+What happens if you are not starting with a blank slate?
+- several dimensional models have been constructed without architecture regards
+- start with determining the gaps between current model vs. organizations' architecture goal
+- map existing dimensional mode to a standardized and sound design
+
+## Conformed Dimensions
+
+`conformed dimensions`: common dimensions that are shared across business fact tables
+
+- should be built only once in the DW/BI environment
+- once built all teams should use them (set as a policy)
+
+### Drilling Across Fact Tables
+
+- allows users to JOIN performance measures from different business process into a single report
+- for example, can be joined in SQL using `FULL OUTER JOIN`
+
+### Identical Conformed Dimensions
+
+Identical conformed dimensions have consistent dimensional keys. attribute column names, attribute definitions, adn attribute values
+
+- most conformed dimensions are defined naturally at the most granular level
+
+### Shrunken Rollup Conformed Dimension with Attribute Subset
+
+- dimensions also conform when that contain a subset of attributes from a more granular dimension
+- they are required when a fact table captures performance metrics at a higher level of granularity than the atomic base dimension
+- they conform to the base atomic dimensions if the attributes are a strict subset of the atomic dimension's attributes
+
+![Figure 4-13](fig_4_13_conforming_shrunken_rollup_dimensions.jpg)
+
+### Shrunken Conformed Dimension with Row Subset
+
+- when two dimensions are at the same level of detail but one represents on a subset of rows
+- be careful with dimension subset, because when using shrunken subset dimension to access a fact table with a complete product set, the joined result may not be complete
+
+![Figure 4-14](fig_4_14_conforming_dimension_subsets.jpg)
+
+### Shrunken Conformed Dimensions on Bus Matrix
+
+- a bus matrix can also identify the use of common dimensions across business process
+
+![Figure 4-15](fig_4_15_shrunken_dimensions_bus_matrix.jpg)
+
+### Limited Conformity
+
+When not to build conformed dimensions?
+
+- when business process, lines, has unique entries, categories, and customers (just so different)
+- when there is really no connection among the business processes: subsidiary
+- better to build separate and self-contained data warehouses for each subsidiary
+- still work on building some degrees of integration
+
+### Governance
+
+data governance: critical so that each department understands what their data can help with in a larger (joined) scope
+
+#### Objectives
+
+- to reach agreement on data definitions, labels, and domain values
+- establish policies and responsibilities for data quality and accuracy; data security and access controls
+
+### Conformed Dimensions and the Agile Movement
+
+How to stand up for conformed dimension by challenging that conformed dimensions enable DW/BI development along with **agile decision making**.
+
+
+## Conformed Facts
+
+- think about what are the KPIs that should conform in the fact tables
+  - revenue
+  - profit
+  - costs
+  - customer score etc..
+
+- if facts live in more than one dimensional model, the underlying definitions and equations for these facts must be the same
+
+- must be disciplined in data naming practices
+
+- sometimes a fact has a natural unit of measure in one fact tables and another in a different one
+  - e.g. measure unit in different locations (1 unit = 1 case; 1 unit = 1 box)
+- solution: build a conversion factor among different process so that it can unite the measures
+- also carry the fact in both units of measure
+
